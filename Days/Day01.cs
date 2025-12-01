@@ -6,55 +6,58 @@ public sealed class Day01 : IDay
 {
     private const string ExampleInput =
         """
-        3   4
-        4   3
-        2   5
-        1   3
-        3   9
-        3   3
+        L68
+        L30
+        R48
+        L5
+        R60
+        L55
+        L1
+        L99
+        R14
+        L82
         """;
 
-    [Example(ExampleInput, 11)]
+    [Example(ExampleInput, 3)]
     public object Part1(IInput input)
     {
-        var (left, right) = ParseInput(input);
-        left.Sort();
-        right.Sort();
-
+        var pos = 50;
         var result = 0;
-        foreach (var tup in left.Zip(right))
+        foreach (var line in input.Lines)
         {
-            result += Math.Abs(tup.First - tup.Second);
+            var offset = (line[0] == 'L' ? -1 : 1) * int.Parse(line[1..]);
+            pos = (pos + offset).Modulo(100);
+            if (pos == 0)
+            {
+                result++;
+            }
         }
 
         return result;
     }
 
-    [Example(ExampleInput, 31)]
+    [Example(ExampleInput, 6)]
     public object Part2(IInput input)
     {
-        var (left, right) = ParseInput(input);
-        var leftCounts = CountValues(left);
-        var rightCounts = CountValues(right);
-        return leftCounts.Sum(kvp => kvp.Key * kvp.Value * rightCounts.GetValueOrDefault(kvp.Key, 0));
-    }
-
-    private static (List<int>, List<int>) ParseInput(IInput input)
-    {
-        var left = new List<int>();
-        var right = new List<int>();
+        var pos = 50;
+        var result = 0;
         foreach (var line in input.Lines)
         {
-            var parts = line.Split("   ");
-            left.Add(int.Parse(parts[0]));
-            right.Add(int.Parse(parts[1]));
+            var sign = line[0] == 'L' ? -1 : 1;
+            var magnitude = int.Parse(line[1..]);
+            var fullRotations = magnitude / 100;
+            result += fullRotations;
+            magnitude -= fullRotations * 100;
+            var newPos = pos + sign * magnitude;
+
+            if (pos != 0 && newPos is <= 0 or >= 100)
+            {
+                result++;
+            }
+
+            pos = newPos.Modulo(100);
         }
 
-        return (left, right);
-    }
-
-    private static Dictionary<int, int> CountValues(List<int> values)
-    {
-        return values.GroupBy(v => v).ToDictionary(g => g.Key, g => g.Count());
+        return result;
     }
 }

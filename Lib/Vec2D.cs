@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace Aoc2025.Lib;
 
 public readonly record struct Vec2D(int Y, int X)
@@ -21,4 +23,25 @@ public readonly record struct Vec2DL(long Y, long X)
     public static Vec2DL operator -(Vec2DL a) => new(-a.Y, -a.X);
 
     public Vec2DL RotateCw() => new(X, -Y);
+}
+
+public static class Vec2DExtensions
+{
+    extension(Vec2D target)
+    {
+        public IEnumerable<Vec2D> GetNeighbors()
+        {
+            return
+            [
+                target + new Vec2D(-1, -1),
+                target + new Vec2D(-1, 0),
+                target + new Vec2D(-1, 1),
+                target + new Vec2D(0, -1),
+                target + new Vec2D(0, 1),
+                target + new Vec2D(1, -1),
+                target + new Vec2D(1, 0),
+                target + new Vec2D(1, 1)
+            ];
+        }
+    }
 }

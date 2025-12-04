@@ -1,4 +1,4 @@
 ﻿using Aoc2025.Days;
 using Aoc2025.Lib;
 
-Runner.Run<Day03>();
+Runner.Run<Day04>();

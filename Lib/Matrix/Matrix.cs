@@ -50,6 +50,11 @@ public static class Matrix
         var lines = input.Split('\n');
         var height = lines.Length;
         var width = lines[0].Length;
+        if (lines[^1].Length < width)
+        {
+            // Pad last line with spaces
+            lines[^1] += new string(' ', width - lines[^1].Length);
+        }
         var values = lines.SelectMany(line => line.Select(parseElem));
         return new Matrix<T>(height, width, values);
     }
